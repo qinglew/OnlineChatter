@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="477.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.ncu.cleo.chatter.controller.ClientController">
+   <children>
+      <Label layoutX="32.0" layoutY="28.0" prefHeight="21.0" prefWidth="50.0" text="用户名:" />
+      <TextField fx:id="usernameTextField" layoutX="94.0" layoutY="25.0" />
+      <Label layoutX="282.0" layoutY="28.0" prefHeight="21.0" prefWidth="36.0" text="密码:" />
+      <TextField fx:id="serverIpTextField" layoutX="94.0" layoutY="71.0" text="127.0.0.1" />
+      <Label layoutX="28.0" layoutY="74.0" prefHeight="21.0" prefWidth="58.0" text="服务器IP:" />
+      <Label layoutX="271.0" layoutY="76.0" text="端口号:" />
+      <TextField fx:id="portTextField" layoutX="322.0" layoutY="71.0" prefHeight="27.0" prefWidth="58.0" text="8888" />
+      <Button fx:id="startButton" layoutX="389.0" layoutY="71.0" mnemonicParsing="false" onAction="#startClient" text="登陆" />
+      <TextField fx:id="messageTextField" layoutX="94.0" layoutY="128.0" prefHeight="27.0" prefWidth="324.0" />
+      <Button fx:id="sendButton" layoutX="439.0" layoutY="128.0" mnemonicParsing="false" onAction="#sendMessage" text="发送" />
+      <Label layoutX="36.0" layoutY="133.0" text="消息框:" />
+      <TextArea fx:id="documentTF" layoutX="37.0" layoutY="220.0" prefHeight="224.0" prefWidth="447.0" />
+      <Button fx:id="logoutButton" layoutX="439.0" layoutY="71.0" mnemonicParsing="false" onAction="#logout" text="登出" />
+      <Label layoutX="37.0" layoutY="186.0" text="消息记录:" />
+      <PasswordField fx:id="passwordTextField" layoutX="322.0" layoutY="25.0" />
+   </children>
+</AnchorPane>
