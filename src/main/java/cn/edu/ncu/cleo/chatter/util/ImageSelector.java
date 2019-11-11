@@ -28,7 +28,7 @@ public class ImageSelector {
      * 随机选取一张未使用的图片
      * @return
      */
-    public synchronized int select() {
+    public int select() {
         int index = random.nextInt(unused.size());
         int image = unused.get(index);
         unused.remove(image);
@@ -40,7 +40,7 @@ public class ImageSelector {
      * 撤销图片的使用
      * @param image
      */
-    public synchronized void retreat(int image) {
+    public void retreat(int image) {
         unused.add(image);
         used.remove(image);
     }
