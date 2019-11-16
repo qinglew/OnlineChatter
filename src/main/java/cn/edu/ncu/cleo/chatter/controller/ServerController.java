@@ -144,7 +144,7 @@ public class ServerController {
                     }
                     if ("SIGNOUT".equals(parts[0])) {
                         sendMessage("SOUGOUT");
-                        systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已下线\n");
+//                        systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已下线\n");
                         close();
                         Platform.runLater(new Runnable() {
                             public void run() {
