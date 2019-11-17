@@ -1,11 +1,13 @@
 package cn.edu.ncu.cleo.chatter.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @description 用户
  */
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 2893470397645764782L;
 
     /**
      * 手机号
