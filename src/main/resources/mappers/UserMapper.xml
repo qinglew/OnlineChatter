@@ -17,13 +17,13 @@
         )
     </select>
 
-    <select id="findUserByUsername" parameterType="string" resultType="role">
+    <select id="findUserByUsername" parameterType="string" resultType="user">
         select phone, username, image, password
         from user
         where username like concat('%', #{username}, '%')
     </select>
 
-    <select id="findUserByPhone" parameterType="string" resultType="role">
+    <select id="findUserByPhone" parameterType="string" resultType="user">
         select phone, username, image, password
         from user
         where phone like concat('%', #{phone}, '%')

@@ -35,6 +35,13 @@ public class User {
         this.image = image;
     }
 
+    public User(String phone, String username, int image, String password) {
+        this.phone = phone;
+        this.username = username;
+        this.image = image;
+        this.password = password;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -65,5 +72,15 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "phone='" + phone + '\'' +
+                ", username='" + username + '\'' +
+                ", image=" + image +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
