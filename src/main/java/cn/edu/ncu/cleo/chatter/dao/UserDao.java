@@ -39,17 +39,17 @@ public interface UserDao {
      * 向数据库中添加用户
      * @param user 特定用户
      */
-    void addUser(User user);
+    int addUser(User user);
 
     /**
      * 从数据库中删除制定用户
      * @param user 特定用户
      */
-    void deleteUser(User user);
+    int deleteUser(User user);
 
     /**
      * 更新用户信息
      * @param user 特定用户
      */
-    void updateUser(User user);
+    int updateUser(User user);
 }

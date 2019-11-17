@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.ncu.cleo.chatter.dao.FriendDao">
+    <insert id="addFriend" parameterType="friend">
+        insert into friends(phone, friend_phone)
+        values(#{phone}, #{friendPhone})
+    </insert>
+
+    <delete id="deleteFriend" parameterType="friend">
+        delete from friends
+        where phone like concat('%', #{phone}, '%') and friend_phone like concat('%', #{friendPhone}, '%')
+    </delete>
+</mapper>

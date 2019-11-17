@@ -27,11 +27,6 @@ public class User {
      */
     private String password;
 
-    /**
-     * 好友列表
-     */
-    private List<User> friends;
-
     public User() {
     }
 
