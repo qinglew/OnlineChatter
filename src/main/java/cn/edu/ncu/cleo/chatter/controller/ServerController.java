@@ -1,8 +1,9 @@
 package cn.edu.ncu.cleo.chatter.controller;
 
 import cn.edu.ncu.cleo.chatter.entity.User;
+import cn.edu.ncu.cleo.chatter.service.UserService;
 import cn.edu.ncu.cleo.chatter.util.ImageSelector;
-import javafx.application.Application;
+import cn.edu.ncu.cleo.chatter.util.UserException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +13,9 @@ import javafx.scene.control.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * @description 服务器控制器
@@ -40,6 +39,7 @@ public class ServerController {
     private String ipAddress;
     private int port;
 
+    private UserService userService;
 
     public void startServer(ActionEvent actionEvent) {
         hostname = hostnameTextField.getText().trim();
@@ -60,6 +60,7 @@ public class ServerController {
         userListView.setItems(observableList);
         clients = new ArrayList<ClientThread>();
         imageSelector = new ImageSelector(36);
+        userService = new UserService();
     }
 
     /**
@@ -85,11 +86,12 @@ public class ServerController {
                     if (clients.size() >= max) {
                         //拒绝连接
                         PrintWriter output = new PrintWriter(socket.getOutputStream());
-                        output.write("ERROR");
+                        output.write("ERROR|人数已达上限，无法登陆!");
                         output.flush();
                         output.close();
                         socket.close();
                         systemTextArea.appendText(new Date().toLocaleString() + "\n人数已上线，拒绝新用户接入.");
+                        continue;
                     }
                     ClientThread clientThread = new ClientThread(socket);
                     clients.add(clientThread);
@@ -130,21 +132,49 @@ public class ServerController {
                 while (true) {
                     String info = reader.readLine();
                     String[] parts = info.split("\\|");
-                    if ("LOGIN".equals(parts[0])) {
-                        int indexImage = imageSelector.select();
-                        user = new User(parts[1], indexImage);
-                        sendMessage("SUCCESS|" + user.getImage());
-                        System.out.println(user.getUsername() + ", " + user.getImage());
-                        systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已上线\n");
-                        Platform.runLater(new Runnable() {
-                            public void run() {
-                                observableList.add(user.getUsername());
-                            }
-                        });
+                    // 注册
+                    if ("REGISTER".equals(parts[0])) {
+                        User user = new User();
+                        user.setPhone(parts[1]);
+                        user.setUsername(parts[2]);
+                        user.setPassword(parts[3]);
+                        user.setImage(Integer.parseInt(parts[4]));
+                        try {
+                            userService.register(user);
+                            sendMessage("SUCCESS");
+                        } catch (UserException e) {
+                            sendMessage("ERROR|" + e.getMessage());
+                        }
+                        close();
+                        clients.remove(this);
+                        break;
                     }
+                    // 登陆
+                    if ("LOGIN".equals(parts[0])) {
+                        final User user = new User();
+                        user.setPhone(parts[1]);
+                        user.setPassword(parts[2]);
+                        try {
+                            userService.login(user);
+                            sendMessage("SUCCESS|" + user.getUsername() + "|" + user.getImage());
+                            this.user = user;
+                            System.out.println(user.getUsername() + ", " + user.getImage());
+                            systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已上线\n");
+                            Platform.runLater(new Runnable() {
+                                public void run() {
+                                    observableList.add(user.getUsername());
+                                }
+                            });
+                        } catch (UserException e) {
+                            sendMessage("ERROR|" + e.getMessage());
+                            close();
+                            clients.remove(this);
+                            break;
+                        }
+                    }
+                    // 登出
                     if ("SIGNOUT".equals(parts[0])) {
                         sendMessage("SOUGOUT");
-//                        systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已下线\n");
                         close();
                         Platform.runLater(new Runnable() {
                             public void run() {
@@ -154,6 +184,7 @@ public class ServerController {
                         imageSelector.retreat(user.getImage());
                         clients.remove(this);
                     }
+                    // 发消息
                     if ("MESSAGE".equals(parts[0])) {
                         messageTextArea.appendText(user.getUsername() + "  " + new Date().toLocaleString() + "\n"
                                 + parts[1] + "\n");
