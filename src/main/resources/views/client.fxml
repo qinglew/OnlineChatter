@@ -1,27 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="477.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.ncu.cleo.chatter.controller.ClientController">
+<AnchorPane prefHeight="561.0" prefWidth="651.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.ncu.cleo.chatter.controller.ClientController">
    <children>
-      <Label layoutX="32.0" layoutY="28.0" prefHeight="21.0" prefWidth="50.0" text="用户名:" />
-      <TextField fx:id="usernameTextField" layoutX="94.0" layoutY="25.0" />
-      <Label layoutX="282.0" layoutY="28.0" prefHeight="21.0" prefWidth="36.0" text="密码:" />
-      <TextField fx:id="serverIpTextField" layoutX="94.0" layoutY="71.0" text="127.0.0.1" />
-      <Label layoutX="28.0" layoutY="74.0" prefHeight="21.0" prefWidth="58.0" text="服务器IP:" />
-      <Label layoutX="271.0" layoutY="76.0" text="端口号:" />
-      <TextField fx:id="portTextField" layoutX="322.0" layoutY="71.0" prefHeight="27.0" prefWidth="58.0" text="8888" />
-      <Button fx:id="startButton" layoutX="389.0" layoutY="71.0" mnemonicParsing="false" onAction="#startClient" text="登陆" />
-      <TextField fx:id="messageTextField" layoutX="94.0" layoutY="128.0" prefHeight="27.0" prefWidth="324.0" />
-      <Button fx:id="sendButton" layoutX="439.0" layoutY="128.0" mnemonicParsing="false" onAction="#sendMessage" text="发送" />
-      <Label layoutX="36.0" layoutY="133.0" text="消息框:" />
-      <TextArea fx:id="documentTF" layoutX="37.0" layoutY="220.0" prefHeight="224.0" prefWidth="447.0" />
-      <Button fx:id="logoutButton" layoutX="439.0" layoutY="71.0" mnemonicParsing="false" onAction="#logout" text="登出" />
-      <Label layoutX="37.0" layoutY="186.0" text="消息记录:" />
-      <PasswordField fx:id="passwordTextField" layoutX="322.0" layoutY="25.0" />
+      <TextField fx:id="messageTF" layoutX="92.0" layoutY="262.0" prefHeight="27.0" prefWidth="408.0" />
+      <Button fx:id="sendBT" layoutX="537.0" layoutY="262.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="27.0" prefWidth="71.0" text="发送" />
+      <Label layoutX="39.0" layoutY="267.0" text="消息框:" />
+      <TextArea fx:id="documentTF" layoutX="43.0" layoutY="335.0" prefHeight="212.0" prefWidth="565.0" />
+      <Label layoutX="39.0" layoutY="305.0" text="聊天消息记录:" />
+      <Accordion>
+        <panes>
+            <TitledPane animated="false" text="配置">
+              <content>
+                <AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="110.0" prefWidth="650.0">
+                     <children>
+                        <Label layoutX="43.0" layoutY="39.0" prefHeight="21.0" prefWidth="58.0" text="服务器IP:" />
+                        <TextField fx:id="serverIpTF" layoutX="111.0" layoutY="36.0" text="127.0.0.1" />
+                        <Label layoutX="311.0" layoutY="40.0" text="端口号:" />
+                        <TextField fx:id="portTF" layoutX="364.0" layoutY="35.0" prefHeight="27.0" prefWidth="58.0" text="8888" />
+                        <Button fx:id="configBT" layoutX="474.0" layoutY="33.0" mnemonicParsing="false" onAction="#config" prefHeight="27.0" prefWidth="82.0" text="确定" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
+          <TitledPane animated="false" text="注册">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="110.0" prefWidth="650.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="26.0" text="手机号:" />
+                        <TextField fx:id="regPhoneTF" layoutX="64.0" layoutY="21.0" prefHeight="27.0" prefWidth="142.0" />
+                        <Label layoutX="219.0" layoutY="22.0" prefHeight="21.0" prefWidth="50.0" text="用户名:" />
+                        <TextField fx:id="regUsernameTF" layoutX="269.0" layoutY="20.0" prefHeight="27.0" prefWidth="142.0" />
+                        <Label layoutX="430.0" layoutY="22.0" prefHeight="21.0" prefWidth="51.0" text="密     码:" />
+                        <PasswordField fx:id="regPasswordTF" layoutX="481.0" layoutY="20.0" prefHeight="27.0" prefWidth="142.0" />
+                        <Button fx:id="registerBT" layoutX="299.0" layoutY="65.0" mnemonicParsing="false" onAction="#register" prefHeight="27.0" prefWidth="82.0" text="注册" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </TitledPane>
+          <TitledPane animated="false" text="登陆">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="110.0" prefWidth="650.0">
+                     <children>
+                        <Label layoutX="37.0" layoutY="42.0" text="手机号:" />
+                        <TextField fx:id="loginPhoneTF" layoutX="88.0" layoutY="38.0" />
+                        <Label layoutX="286.0" layoutY="43.0" text="密码:" />
+                        <PasswordField fx:id="loginPasswordTF" layoutX="325.0" layoutY="38.0" />
+                        <Button fx:id="loginBT" layoutX="511.0" layoutY="37.0" mnemonicParsing="false" onAction="#login" text="登陆" />
+                        <Button fx:id="logoutBT" layoutX="576.0" layoutY="37.0" mnemonicParsing="false" onAction="#logout" text="登出" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </TitledPane>
+        </panes>
+      </Accordion>
+      <Circle fx:id="status" fill="#a7abae" layoutX="48.0" layoutY="222.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="usernameTip" layoutX="92.0" layoutY="209.0" prefHeight="27.0" prefWidth="153.0" text="未登陆" />
+      <ImageView fx:id="iconImage" fitHeight="42.0" fitWidth="43.0" layoutX="565.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true" visible="false" />
    </children>
 </AnchorPane>

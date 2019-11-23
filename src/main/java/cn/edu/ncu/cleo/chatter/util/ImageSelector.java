@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * @author Carlos Leo
+ * @author qinglew@outlook.com
  * @description 图像选择器
  */
 public class ImageSelector {
-    private int numOfImages;
     private Random random;
 
     private List<Integer> used; // 已使用
     private List<Integer> unused; // 未使用
 
     public ImageSelector(int numOfImages) {
-        this.numOfImages = numOfImages;
         random = new Random();
         used = new ArrayList<Integer>();
         unused = new ArrayList<Integer>();

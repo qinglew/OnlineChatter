@@ -8,13 +8,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
+ * @author Carlos Leo
+ * @author qinglew@outlook.com
  * @description 客户端
  */
 public class ClientApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/views/client.fxml"));
-        primaryStage.setTitle("服务器");
-        primaryStage.setScene(new Scene(root, 520, 477));
+        primaryStage.setTitle("PC客户端");
+        primaryStage.setScene(new Scene(root, 651, 561));
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/app_logo.png")));
         primaryStage.show();
     }

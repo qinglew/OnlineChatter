@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.ncu.cleo.chatter.dao.UserDao">
+    <select id="findAll" resultType="user">
+        select phone, username, image, password
+        from user
+    </select>
+
+    <select id="findFriendsByUser" parameterType="user" resultType="user">
+        select phone, username, image, password
+        from user
+        where phone = (
+            select friend_phone from user, friends
+            where user.phone = #{phone} and user.phone = friends.phone
+        )
+    </select>
+
+    <select id="findUserByUsername" parameterType="string" resultType="user">
+        select phone, username, image, password
+        from user
+        where username = #{username}
+    </select>
+
+    <select id="findUserByPhone" parameterType="string" resultType="user">
+        select phone, username, image, password
+        from user
+        where phone = #{phone}
+    </select>
+
+    <select id="addUser" parameterType="user" resultType="Integer">
+        insert into user(phone, username, image, password)
+        values(#{phone}, #{username}, #{image}, #{password})
+    </select>
+
+    <delete id="deleteUser" parameterType="user">
+        delete from user
+        where username = #{username}
+    </delete>
+
+    <update id="updateUser" parameterType="user">
+        update user set phone=#{phone}, username=#{username}, image=#{image}, password=#{password}
+    </update>
+</mapper>
