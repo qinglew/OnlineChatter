@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * @author Carlos Leo
+ * @author qinglew@outlook.com
  * @description MyBatis连接工具
  */
 public class SqlSessionFactoryUtil {

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * @author Carlos Leo
+ * @author qinglew@outlook.com
  * @description 图像选择器
  */
 public class ImageSelector {

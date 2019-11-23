@@ -7,6 +7,8 @@ import cn.edu.ncu.cleo.chatter.util.UserException;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * @author Carlos Leo
+ * @author qinglew@outlook.com
  * @description 用户服务
  */
 public class UserService {
@@ -29,13 +31,16 @@ public class UserService {
             }
             session.commit();
         } catch (UserException e) {
-            session.rollback();
+            if (session != null)
+                session.rollback();
             throw e;
         } catch (Exception e) {
-            session.rollback();
+            if (session != null)
+                session.rollback();
             e.printStackTrace();
         } finally {
-            session.close();
+            if (session != null)
+                session.close();
         }
     }
 
@@ -60,10 +65,12 @@ public class UserService {
             session.rollback();
             throw e;
         } catch (Exception e) {
-            session.rollback();
+            if (session != null)
+                session.rollback();
             e.printStackTrace();
         } finally {
-            session.close();
+            if (session != null)
+                session.close();
         }
     }
 }

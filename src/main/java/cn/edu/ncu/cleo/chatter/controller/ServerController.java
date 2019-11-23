@@ -2,7 +2,6 @@ package cn.edu.ncu.cleo.chatter.controller;
 
 import cn.edu.ncu.cleo.chatter.entity.User;
 import cn.edu.ncu.cleo.chatter.service.UserService;
-import cn.edu.ncu.cleo.chatter.util.ImageSelector;
 import cn.edu.ncu.cleo.chatter.util.UserException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -18,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * @author Carlos Leo
+ * @author qinglew@outlook.com
  * @description 服务器控制器
  */
 public class ServerController {
@@ -33,19 +34,30 @@ public class ServerController {
     private ServerSocket serverSocket;
     private List<ClientThread> clients;
 
-    ImageSelector imageSelector;
-
     private String hostname;
     private String ipAddress;
     private int port;
 
     private UserService userService;
 
+    /**
+     * 初始化
+     */
+    public void initialize() {
+        observableList = FXCollections.observableArrayList();
+        userListView.setItems(observableList);
+        clients = new ArrayList<ClientThread>();
+        userService = new UserService();
+    }
+
+    /**
+     * 按钮事件：开启服务器
+     * @param actionEvent 事件绑定
+     */
     public void startServer(ActionEvent actionEvent) {
         hostname = hostnameTextField.getText().trim();
         ipAddress = ipTextField.getText().trim();
         port = Integer.parseInt(portTextField.getText());
-
         try {
             serverSocket = new ServerSocket(port);
             new Thread(new ServerThread(serverSocket)).start();
@@ -53,14 +65,6 @@ public class ServerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void initialize() {
-        observableList = FXCollections.observableArrayList();
-        userListView.setItems(observableList);
-        clients = new ArrayList<ClientThread>();
-        imageSelector = new ImageSelector(36);
-        userService = new UserService();
     }
 
     /**
@@ -107,6 +111,9 @@ public class ServerController {
         }
     }
 
+    /**
+     * 面向客户端连接的线程实体
+     */
     class ClientThread implements Runnable {
         private User user;
         private Socket socket;
@@ -118,6 +125,9 @@ public class ServerController {
             getStreams();
         }
 
+        /**
+         * 获取输入输出流
+         */
         private void getStreams() {
             try {
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -158,7 +168,6 @@ public class ServerController {
                             userService.login(user);
                             sendMessage("SUCCESS|" + user.getUsername() + "|" + user.getImage());
                             this.user = user;
-                            System.out.println(user.getUsername() + ", " + user.getImage());
                             systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已上线\n");
                             Platform.runLater(new Runnable() {
                                 public void run() {
@@ -173,15 +182,15 @@ public class ServerController {
                         }
                     }
                     // 登出
-                    if ("SIGNOUT".equals(parts[0])) {
-                        sendMessage("SOUGOUT");
+                    if ("LOGOUT".equals(parts[0])) {
+                        sendMessage("LOGOUT");
                         close();
                         Platform.runLater(new Runnable() {
                             public void run() {
                                 observableList.remove(user.getUsername());
+                                systemTextArea.appendText(new Date().toLocaleString() + ": 用户" + user.getUsername() + "已下线\n");
                             }
                         });
-                        imageSelector.retreat(user.getImage());
                         clients.remove(this);
                     }
                     // 发消息
@@ -190,7 +199,6 @@ public class ServerController {
                                 + parts[1] + "\n");
                         for (ClientThread clientThread: clients) {
                             clientThread.sendMessage("MESSAGE|" + user.getUsername() + "|" + user.getImage() + "|" + parts[1]);
-                            System.out.println(user.getUsername() + ", " + user.getImage());
                         }
                     }
                 }
@@ -207,11 +215,18 @@ public class ServerController {
             }
         }
 
+        /**
+         * 发送消息
+         * @param message 消息
+         */
         void sendMessage(String message) {
             writer.println(message);
             writer.flush();
         }
 
+        /**
+         * 关闭资源
+         */
         private void close() {
             try {
                 if (reader != null)

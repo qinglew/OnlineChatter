@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
+ * @author Carlos Leo
+ * @author qinglew@outlook.com
  * @description 服务器
  */
 public class ServerApplication extends Application {
