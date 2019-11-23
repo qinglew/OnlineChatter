@@ -20,9 +20,9 @@ The application of client cannot change the image of the Window.
 
 **Server**
 
-![Server](./Screenshots/server.png)
+<img width="717" height="616" src="./Screenshots/server.png"  alt="Server" />
 
 **PC Client**
 
-![Client](./Screenshots/client.png)
+<img width="652" height="584" src="./Screenshots/client.png"  alt="Client" />
 
