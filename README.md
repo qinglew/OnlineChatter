@@ -4,10 +4,25 @@ This is the server and PC client with GUI of the online chatter, which is the th
 
 ### Technology Stack
 
+* Maven
 * Java
 * JavaFx
 * TCP/IP (Socket)
+* MyBatis
+* MySQL
+* Junit
 
 ### Something Uncompleted
 
 The application of client cannot change the image of the Window.
+
+### ScreenShots
+
+**Server**
+
+![Server](./Screenshots/server.png)
+
+**PC Client**
+
+![Client](./Screenshots/client.png)
+
