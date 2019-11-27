@@ -166,7 +166,8 @@ public class ServerController {
                         user.setPassword(parts[2]);
                         try {
                             userService.login(user);
-                            sendMessage("SUCCESS|" + user.getUsername() + "|" + user.getImage());
+                            sendMessage("SUCCESS|" + user.getPhone() + "|" + user.getUsername() + "|" + user.getPassword()
+                            + "|" + user.getImage() + "|" + user.getDesc());
                             this.user = user;
                             systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已上线\n");
                             Platform.runLater(new Runnable() {
@@ -196,9 +197,51 @@ public class ServerController {
                     // 发消息
                     if ("MESSAGE".equals(parts[0])) {
                         messageTextArea.appendText(user.getUsername() + "  " + new Date().toLocaleString() + "\n"
-                                + parts[1] + "\n");
+                                + parts[3] + "\n");
                         for (ClientThread clientThread: clients) {
-                            clientThread.sendMessage("MESSAGE|" + user.getUsername() + "|" + user.getImage() + "|" + parts[1]);
+                            clientThread.sendMessage("MESSAGE|" + parts[1] + "|" + user.getUsername() + "|" + user.getImage() + "|" + parts[3]);
+                        }
+                    }
+                    // 更新用户信息
+                    if ("UPDATE".equals(parts[0])) {
+                        final User user = new User();
+                        user.setPhone(parts[2]);
+                        user.setUsername(parts[3]);
+                        user.setPassword(parts[4]);
+                        user.setImage(Integer.parseInt(parts[5]));
+                        user.setDesc(parts[6]);
+                        System.out.println(user);
+                        System.out.println("Received the user from client successfully.");
+                        try {
+                            userService.update(user);
+                            this.user = user;
+                            System.out.println("Update user's info successfully.");
+                            if ("IMAGE".equals(parts[1]))
+                                // 通知所有客户端修改UI
+                                for (ClientThread clientThread : clients) {
+                                    clientThread.sendMessage("IMAGE_SUCCESS|" + user.getPhone() + "|" + user.getImage());
+                                }
+                            if ("USERNAME".equals(parts[1]))
+                                // 通知所有客户端修改UI
+                                for (ClientThread clientThread : clients) {
+                                    clientThread.sendMessage("USERNAME_SUCCESS|" + user.getPhone() + "|" + user.getUsername());
+                                }
+                            if ("DESC".equals(parts[1]))
+                                sendMessage("DESC_SUCCESS");
+                            if ("PASSWORD".equals(parts[1]))
+                                sendMessage("PASSWORD_SUCCESS");
+                            System.out.println(user);
+                            System.out.println("Rewrite data to client successfully.");
+                        } catch (UserException e) {
+                            if ("IMAGE".equals(parts[1]))
+                                sendMessage("IMAGE_ERROR|" + e.getMessage());
+                            if ("USERNAME".equals(parts[1]))
+                                sendMessage("USERNAME_ERROR|" + e.getMessage());
+                            System.out.println("Rewrite error data to client successfully.");
+                            if ("DESC".equals(parts[1]))
+                                sendMessage("DESC_ERROR|" + e.getMessage());
+                            if ("PASSWORD".equals(parts[1]))
+                                sendMessage("PASSWORD_ERROR|" + e.getMessage());
                         }
                     }
                 }
