@@ -153,8 +153,8 @@ public class ClientController {
         if (ret.contains("SUCCESS")) {
             // 登陆成功
             String[] parts = ret.split("\\|");
-            username = parts[1];
-            image = Integer.parseInt(parts[2]);
+            username = parts[2];
+            image = Integer.parseInt(parts[4]);
             status.setFill(Color.LIGHTGREEN);
             usernameTip.setText(username);
             online = true;

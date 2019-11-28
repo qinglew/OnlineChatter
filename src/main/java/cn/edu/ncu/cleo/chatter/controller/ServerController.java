@@ -244,6 +244,20 @@ public class ServerController {
                                 sendMessage("PASSWORD_ERROR|" + e.getMessage());
                         }
                     }
+                    // 获取用户列表
+                    if ("LIST".equals(parts[0])) {
+                        StringBuilder builder = new StringBuilder("LIST|");
+                        for (int i = 0, size = clients.size(); i < size; i++) {
+                            User user = clients.get(i).user;
+                            builder.append(user.getPhone()).append(",");
+                            builder.append(user.getUsername()).append(",");
+                            builder.append(user.getImage()).append(",");
+                            builder.append(user.getDesc());
+                            if (i != (size - 1))
+                                builder.append("!");
+                        }
+                        sendMessage(builder.toString());
+                    }
                 }
             } catch (IOException e) {
                 clients.remove(this);
