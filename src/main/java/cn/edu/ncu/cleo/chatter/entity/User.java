@@ -1,7 +1,6 @@
 package cn.edu.ncu.cleo.chatter.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @description 用户
@@ -29,6 +28,11 @@ public class User implements Serializable {
      */
     private String password;
 
+    /**
+     * 个人描述
+     */
+    private String description;
+
     public User() {
     }
 
@@ -42,6 +46,14 @@ public class User implements Serializable {
         this.username = username;
         this.image = image;
         this.password = password;
+    }
+
+    public User(String phone, String username, int image, String password, String description) {
+        this.phone = phone;
+        this.username = username;
+        this.image = image;
+        this.password = password;
+        this.description = description;
     }
 
     public String getPhone() {
@@ -76,6 +88,14 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getDesc() {
+        return description;
+    }
+
+    public void setDesc(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -83,6 +103,7 @@ public class User implements Serializable {
                 ", username='" + username + '\'' +
                 ", image=" + image +
                 ", password='" + password + '\'' +
+                ", desc='" + description + '\'' +
                 '}';
     }
 }

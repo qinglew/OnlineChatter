@@ -131,7 +131,7 @@ public class UserDaoTest {
         try {
             sqlSession = SqlSessionFactoryUtil.openSqlSession();
             UserDao userDao = sqlSession.getMapper(UserDao.class);
-            User user = new User("13177737888", "刘清", 3, "123456");
+            User user = new User("13177737888", "QingLew", 3, "cleo990625");
             userDao.updateUser(user);
             sqlSession.commit();
             logger.debug("SUCCESS");
