@@ -10,9 +10,11 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -22,18 +24,8 @@ import java.util.List;
  * @description 服务器控制器
  */
 public class ServerController {
-    public TextField hostnameTextField;
-    public TextField ipTextField;
-    public TextField portTextField;
-    public Button startButton;
-    public TextArea messageTextArea;
-    public TextArea systemTextArea;
-    public ListView<String> userListView;
-
-    private ObservableList<String> observableList;
     private ServerSocket serverSocket;
     private List<ClientThread> clients;
-
     private String hostname;
     private String ipAddress;
     private int port;
@@ -43,28 +35,18 @@ public class ServerController {
     /**
      * 初始化
      */
-    public void initialize() {
-        observableList = FXCollections.observableArrayList();
-        userListView.setItems(observableList);
-        clients = new ArrayList<ClientThread>();
+    public ServerController(int port) throws IOException {
+        serverSocket = new ServerSocket(port);
+        clients = new ArrayList<>();
+        hostname = "localhost";
+        ipAddress = Arrays.toString(serverSocket.getInetAddress().getAddress());
         userService = new UserService();
     }
 
-    /**
-     * 按钮事件：开启服务器
-     * @param actionEvent 事件绑定
-     */
-    public void startServer(ActionEvent actionEvent) {
-        hostname = hostnameTextField.getText().trim();
-        ipAddress = ipTextField.getText().trim();
-        port = Integer.parseInt(portTextField.getText());
-        try {
-            serverSocket = new ServerSocket(port);
-            new Thread(new ServerThread(serverSocket)).start();
-            systemTextArea.appendText(new Date().toLocaleString() + ": 服务器已启动！\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void startServer() {
+        new Thread(new ServerThread(serverSocket)).start();
+        System.out.println(new Date().toLocaleString() + " " + ipAddress);
+        System.out.println(new Date().toLocaleString() + ": 服务器已启动！");
     }
 
     /**
@@ -94,7 +76,7 @@ public class ServerController {
                         output.flush();
                         output.close();
                         socket.close();
-                        systemTextArea.appendText(new Date().toLocaleString() + "\n人数已上线，拒绝新用户接入.");
+                        System.out.println(new Date().toLocaleString() + "\n人数已上线，拒绝新用户接入.");
                         continue;
                     }
                     ClientThread clientThread = new ClientThread(socket);
@@ -104,10 +86,6 @@ public class ServerController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        public ServerSocket getServerSocket() {
-            return serverSocket;
         }
     }
 
@@ -169,12 +147,7 @@ public class ServerController {
                             sendMessage("SUCCESS|" + user.getPhone() + "|" + user.getUsername() + "|" + user.getPassword()
                             + "|" + user.getImage() + "|" + user.getDesc());
                             this.user = user;
-                            systemTextArea.appendText(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已上线\n");
-                            Platform.runLater(new Runnable() {
-                                public void run() {
-                                    observableList.add(user.getUsername());
-                                }
-                            });
+                            System.out.println(new Date().toLocaleString() + ": 用户\"" + user.getUsername() + "\"已上线");
                         } catch (UserException e) {
                             sendMessage("ERROR|" + e.getMessage());
                             close();
@@ -186,18 +159,12 @@ public class ServerController {
                     if ("LOGOUT".equals(parts[0])) {
                         sendMessage("LOGOUT");
                         close();
-                        Platform.runLater(new Runnable() {
-                            public void run() {
-                                observableList.remove(user.getUsername());
-                                systemTextArea.appendText(new Date().toLocaleString() + ": 用户" + user.getUsername() + "已下线\n");
-                            }
-                        });
+                        System.out.println(new Date().toLocaleString() + ": 用户" + user.getUsername() + "已下线");
                         clients.remove(this);
                     }
                     // 发消息
                     if ("MESSAGE".equals(parts[0])) {
-                        messageTextArea.appendText(user.getUsername() + "  " + new Date().toLocaleString() + "\n"
-                                + parts[3] + "\n");
+                        System.out.println(user.getUsername() + "  " + new Date().toLocaleString() + "  " + parts[3]);
                         for (ClientThread clientThread: clients) {
                             clientThread.sendMessage("MESSAGE|" + parts[1] + "|" + user.getUsername() + "|" + user.getImage() + "|" + parts[3]);
                         }
@@ -210,12 +177,9 @@ public class ServerController {
                         user.setPassword(parts[4]);
                         user.setImage(Integer.parseInt(parts[5]));
                         user.setDesc(parts[6]);
-                        System.out.println(user);
-                        System.out.println("Received the user from client successfully.");
                         try {
                             userService.update(user);
                             this.user = user;
-                            System.out.println("Update user's info successfully.");
                             if ("IMAGE".equals(parts[1]))
                                 // 通知所有客户端修改UI
                                 for (ClientThread clientThread : clients) {
@@ -230,8 +194,6 @@ public class ServerController {
                                 sendMessage("DESC_SUCCESS");
                             if ("PASSWORD".equals(parts[1]))
                                 sendMessage("PASSWORD_SUCCESS");
-                            System.out.println(user);
-                            System.out.println("Rewrite data to client successfully.");
                         } catch (UserException e) {
                             if ("IMAGE".equals(parts[1]))
                                 sendMessage("IMAGE_ERROR|" + e.getMessage());
@@ -262,12 +224,7 @@ public class ServerController {
             } catch (IOException e) {
                 clients.remove(this);
             } catch (Exception e) {
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        observableList.remove(user.getUsername());
-                        systemTextArea.appendText(new Date().toLocaleString() + ": 用户" + user.getUsername() + "已下线\n");
-                    }
-                });
+                System.out.println(new Date().toLocaleString() + ": 用户" + user.getUsername() + "已下线");
                 clients.remove(this);
             }
         }
