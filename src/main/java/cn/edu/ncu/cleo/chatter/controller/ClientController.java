@@ -135,6 +135,7 @@ public class ClientController {
      * @param actionEvent 事件绑定
      */
     public void login(ActionEvent actionEvent) {
+        System.out.println("login invoked");
         serverIp = serverIpTF.getText().trim();
         port = Integer.parseInt(portTF.getText());
         phone = loginPhoneTF.getText();
@@ -155,6 +156,7 @@ public class ClientController {
             String[] parts = ret.split("\\|");
             username = parts[2];
             image = Integer.parseInt(parts[4]);
+            System.out.println(username + ", " + image);
             status.setFill(Color.LIGHTGREEN);
             usernameTip.setText(username);
             online = true;
@@ -190,7 +192,7 @@ public class ClientController {
                 makeTip("WARNING", "消息不能为空!");
                 return;
             }
-            tcpClient.sendData("MESSAGE|" + message);
+            tcpClient.sendData("MESSAGE|" + phone + "|" + username + "|" + message);
             messageTF.setText("");
         } else {
             makeTip("Warning!", "请先登陆!");
@@ -244,8 +246,8 @@ public class ClientController {
                 String[] parts = receivedData.split("\\|");
                 if ("MESSAGE".equals(parts[0])) {
                     Platform.runLater(() -> {
-                        documentTF.appendText("\"" + parts[1] + "\"  " + new Date().toLocaleString() + "\n" +
-                                parts[3] + "\n");
+                        documentTF.appendText("\"" + parts[2] + "\"  " + new Date().toLocaleString() + "\n" +
+                                parts[4] + "\n");
                     });
                 }
             }
